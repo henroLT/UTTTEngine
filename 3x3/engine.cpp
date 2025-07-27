@@ -20,9 +20,7 @@ void display() {
     FOR(i, SIZE) {
         FOR(u, SIZE) {
             std::cout << ((BOARD[i][u] == 0)? " " : 
-                            (BOARD[i][u] == 1)? "X" : 
-                                "O")
-                                    << " ";
+                            (BOARD[i][u] == 1)? "X" : "O") << " ";
         } std::cout << '\n';
     }
 }
