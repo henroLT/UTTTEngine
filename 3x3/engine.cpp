@@ -61,6 +61,16 @@ void displayRules() {
     wipe();
 }
 
+bool checkWin(char board[][]) {
+    FOR(i, SIZE) {
+        FOR(u, SIZE) {
+            if (board[i][u] == '\0')continue;
+
+        }
+    }
+    return false;
+}
+
 void calculate() {
     // HERES THE GOOD SHENNAGINS
     
@@ -68,9 +78,6 @@ void calculate() {
     checkWin();
 }
 
-bool checkWin() {
-
-}
 
 void end() {
 
@@ -110,7 +117,7 @@ void run() {
             boardDisplay();
         }
 
-        // parse move
+        
         std::pair<int,int> move;
         do {
             std::cout << "\033[1mMake your move:\033[0m\n";
