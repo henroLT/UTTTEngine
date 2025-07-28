@@ -5,13 +5,15 @@
 
 #define FOR(x, n) for (int x = 0; x < n; ++x)
 #define SIZE 3
+#define row(a) a.first
+#define col(a) a.second
 struct state {
-    int board[SIZE][SIZE];
+    char board[SIZE][SIZE];
     int player;            // 1, 2
     int turn;
 };
 
-int BOARD[SIZE][SIZE] = {};
+char BOARD[SIZE][SIZE] = {};
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -32,7 +34,7 @@ void boardDisplay() {
         FOR(u, SIZE) {
             std::cout 
                     << ((u == 0)? " " : "") 
-                    << ((BOARD[i][u] == 0)? " " : (BOARD[i][u] == 1)? "X" : "O") 
+                    << ((BOARD[i][u] == '\0')? ' ' : BOARD[i][u]) 
                     << ((u != SIZE - 1)? " | " : "");
         }
         std::cout << ((i != SIZE - 1)? "\n---+---+---\n" : "\n");
@@ -52,8 +54,8 @@ void displayRules() {
     std::cout << "5. The first player to get three in a row (hor, ver, dia) wins.\n";
     std::cout << "6. If all cells are filled without a winner, the game is a draw.\n\n";
     std::cout << "Good luck and have fun!\n\n";
-    std::cout << "At any prompt, input \"R\" to see the rules again.\n";
-    std::cout << "At any prompt, input \"Q\" to end the game.\n";
+    std::cout << "At any prompt (after turn), input \"R\" to see the rules again.\n";
+    std::cout << "At any prompt (after turn), input \"Q\" to end the game.\n";
     std::cout << "Press enter to start game.\n";
     std::cin.get();
     wipe();
@@ -61,6 +63,17 @@ void displayRules() {
 
 void calculate() {
     // HERES THE GOOD SHENNAGINS
+    
+    // after a moves been made
+    checkWin();
+}
+
+bool checkWin() {
+
+}
+
+void end() {
+
 }
 
 void run() {
@@ -96,27 +109,37 @@ void run() {
             calculate();
             boardDisplay();
         }
-        
+
+        // parse move
         std::pair<int,int> move;
         do {
             std::cout << "\033[1mMake your move:\033[0m\n";
-            std::cout << "Row: \n";
-            while (!(std::cin >> move.first) || (move.first < 0 || move.first >= SIZE)) {
+            std::cout << "Row: ";
+            while (!(std::cin >> row(move)) || (row(move) < 0 || row(move) >= SIZE)) {
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::cout << "Input a valid row.\n";
             }
 
-            std::cout << "Column: \n";
-            while (!(std::cin >> move.second) || (move.second < 0 || move.second >= SIZE)) {
+            std::cout << "Column: ";
+            while (!(std::cin >> col(move)) || (col(move) < 0 || col(move) >= SIZE)) {
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::cout << "Input a valid Column.\n";
             }
-            
+
+            if (BOARD[row(move)][col(move)] == '\0') {
+                BOARD[row(move)][col(move)] = player;
+            } else {
+                std::cout << "This square has been played. Pick another: \n";
+                continue;
+            }
+
             break;
         } while (1);
 
+        if (checkWin()) end();
+        if (player == 'X') calculate();
     }
 }
 
