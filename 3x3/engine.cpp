@@ -59,6 +59,10 @@ void displayRules() {
     wipe();
 }
 
+void calculate() {
+    // HERES THE GOOD SHENNAGINS
+}
+
 void run() {
     displayRules();
 
@@ -83,12 +87,36 @@ void run() {
         }
         if (valid) break;
 
-        std::cout <<"Invalid input. Please enter \"X\" or \"O\",\n";
+        std::cout << "Invalid input. Please enter \"X\" or \"O\",\n";
     } while (1);
 
-    while (1) { // actual game loop, will code later.
-        boardDisplay();
-        break;
+    while (1) {
+        if (player == 'X') boardDisplay();
+        else {
+            calculate();
+            boardDisplay();
+        }
+        
+        std::pair<int,int> move;
+        do {
+            std::cout << "\033[1mMake your move:\033[0m\n";
+            std::cout << "Row: \n";
+            while (!(std::cin >> move.first) || (move.first < 0 || move.first >= SIZE)) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Input a valid row.\n";
+            }
+
+            std::cout << "Column: \n";
+            while (!(std::cin >> move.second) || (move.second < 0 || move.second >= SIZE)) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Input a valid Column.\n";
+            }
+            
+            break;
+        } while (1);
+
     }
 }
 
