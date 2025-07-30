@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <atomic>
 #include <thread>
+#include <vector>
 
 #define FOR(x, n) for (int x = 0; x < n; ++x)
 #define SIZE 3
@@ -19,6 +20,8 @@ struct state {
 
 extern char BOARD[SIZE][SIZE];
 extern char PLAYER;
-extern int WIN;
+extern char WIN;
+extern bool DRAW;
+
 
 #endif

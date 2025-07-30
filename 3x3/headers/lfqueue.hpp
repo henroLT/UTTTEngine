@@ -5,10 +5,10 @@
 
 struct node;
 
-typedef struct {
+struct pointer {
     node* ptr;
     unsigned int count;
-} pointer;
+};
 
 struct node {
     state data;
