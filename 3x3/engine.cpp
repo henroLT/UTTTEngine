@@ -1,19 +1,8 @@
-#include <iostream>
-#include <cstdlib>
-#include <atomic>
-#include <thread>
-
-#define FOR(x, n) for (int x = 0; x < n; ++x)
-#define SIZE 3
-#define row(a) a.first
-#define col(a) a.second
-struct state {
-    char board[SIZE][SIZE];
-    int player;            // 1, 2
-    int turn;
-};
+#include "basics.h"
 
 char BOARD[SIZE][SIZE] = {};
+char PLAYER;
+int WIN;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +50,7 @@ void displayRules() {
     wipe();
 }
 
-bool checkWin(char board[][]) {
+bool checkWin(char board[SIZE][SIZE]) {
     FOR(i, SIZE) {
         FOR(u, SIZE) {
             if (board[i][u] == '\0')continue;
@@ -75,7 +64,7 @@ void calculate() {
     // HERES THE GOOD SHENNAGINS
     
     // after a moves been made
-    checkWin();
+    
 }
 
 
@@ -86,14 +75,13 @@ void end() {
 void run() {
     displayRules();
 
-    char player;
     do {
         std::cout << "Please select \"X\" or \"O\": \n";
-        player = std::cin.get();
+        PLAYER = std::cin.get();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         bool valid = false;
 
-        switch(player) {
+        switch(PLAYER) {
             case 'Q':
                 wipe();
                 return;
@@ -111,7 +99,7 @@ void run() {
     } while (1);
 
     while (1) {
-        if (player == 'X') boardDisplay();
+        if (PLAYER == 'X') boardDisplay();
         else {
             calculate();
             boardDisplay();
@@ -136,7 +124,7 @@ void run() {
             }
 
             if (BOARD[row(move)][col(move)] == '\0') {
-                BOARD[row(move)][col(move)] = player;
+                BOARD[row(move)][col(move)] = PLAYER;
             } else {
                 std::cout << "This square has been played. Pick another: \n";
                 continue;
@@ -145,8 +133,8 @@ void run() {
             break;
         } while (1);
 
-        if (checkWin()) end();
-        if (player == 'X') calculate();
+        if (checkWin(BOARD)) end();
+        if (PLAYER == 'X') calculate();
     }
 }
 
