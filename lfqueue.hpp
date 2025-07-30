@@ -1,4 +1,7 @@
-#include "basics.h"
+#ifndef LFQUEUE_HPP
+#define LFQUEUE_HPP
+
+#include "basics.hpp"
 
 struct node;
 
@@ -97,3 +100,5 @@ class lfqueue {
             delete head.load().ptr;
         }
 };
+
+#endif

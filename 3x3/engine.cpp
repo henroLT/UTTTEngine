@@ -1,4 +1,5 @@
-#include "basics.h"
+#include "basics.hpp"
+#include "lfqueue.hpp"
 
 char BOARD[SIZE][SIZE] = {};
 char PLAYER;
