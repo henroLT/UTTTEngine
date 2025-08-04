@@ -1,5 +1,5 @@
 #include "headers/basics.hpp"
-#include "engine.cpp"
+#include "headers/solver.hpp"
 
 
 char BOARD[SIZE][SIZE] = {};
