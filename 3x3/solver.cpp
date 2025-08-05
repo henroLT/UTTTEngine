@@ -9,15 +9,34 @@ Solver::~Solver() {
     delete head;
 }
 
-void threadFunc(lfqueue *list, std::unordered_map<state, int> &visit) {
+void threadFunc(lfqueue *list, std::unordered_map<stateTree*, int> &visit, std::mutex &mutt) {
     while(!list->isEmpty()) {
-        state temp;
+        stateTree *temp;
         if (!list->pop(temp)) continue;
-        if (visit[temp]) continue;
-        visit[temp]++;
+        {
+            std::lock_guard<std::mutex> lock(mutt);
+            if (visit[temp]++) continue;
+        }
 
-        //generate and push children (also check if they in visit, and add them to visit)
+        std::vector<stateTree*> childs = generateChildren(temp);
         
+        for (auto &c : childs) {
+            std::lock_guard<std::mutex> lock(mutt);
+            if (!visit[c]++) list->push(c);
+        }
+    }
+}
+
+//struct state {
+//    char board[SIZE][SIZE];
+//    int player;            
+//    int turn;
+
+std::vector<stateTree*> generateChildren(stateTree* thingy) {
+    std::vector<stateTree*> res;
+
+    for (int i = 0; i < SIZE; ++i) {
+        for (int u = 0; u < )
     }
 }
 

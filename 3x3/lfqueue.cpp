@@ -1,24 +1,26 @@
 #include "headers/lfqueue.hpp"
 
 lfqueue::lfqueue() {
-    node *dummy = new node({});
+    node *dummy = new node(nullptr);
     pointer p = {dummy, 0};
     head.store(p);
     tail.store(p);
 }
 
 lfqueue::~lfqueue() {
-    state dummy;
+    stateTree *dummy;
     while (pop(dummy));
     delete head.load().ptr;
 }
 
-void lfqueue::push(const state &value) {
+void lfqueue::push(stateTree* value) {
     node* newNode = new node(value);
     pointer tailOld;
+
     while (true) {
         tailOld = tail.load();
         pointer next = tailOld.ptr->next.load();
+
         if (tailOld.ptr == tail.load().ptr) {
             if (next.ptr == nullptr) {
                 pointer newNext = {newNode, next.count + 1};
@@ -35,12 +37,14 @@ void lfqueue::push(const state &value) {
     }
 }
 
-bool lfqueue::pop(state &result) {
+bool lfqueue::pop(stateTree *&result) {
     pointer headOld;
+
     while (true) {
         headOld = head.load();
         pointer tailOld = tail.load();
         pointer next = headOld.ptr->next.load();
+
         if (headOld.ptr == head.load().ptr) {
             if (headOld.ptr == tailOld.ptr) {
                 if (next.ptr == nullptr) {
@@ -60,7 +64,7 @@ bool lfqueue::pop(state &result) {
     }  
 }
 
-bool lfqueue::front(state &result) {
+bool lfqueue::front(stateTree *&result) {
     pointer headOld = head.load();
     pointer next = headOld.ptr->next.load();
     if (next.ptr == nullptr) {
@@ -71,6 +75,6 @@ bool lfqueue::front(state &result) {
 }
 
 bool lfqueue::isEmpty() {
-    state dummy;
+    stateTree* dummy;
     return !front(dummy);
 }
