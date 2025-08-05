@@ -18,13 +18,11 @@ struct stateTree {
 };
 
 struct state {
-    char board[SIZE][SIZE];
-    int player;            
+    char board[SIZE][SIZE];           
     int turn;
 
     bool operator==(const state& other) const {
-        return player == other.player &&
-                turn == other.turn &&
+        return turn == other.turn &&
                 memcmp(board, other.board, sizeof(board)) == 0;
     }
 };
@@ -37,7 +35,6 @@ struct std::hash<state> {
             for (int j = 0; j < SIZE; ++j)
                 h = h * 31 + s.board[i][j];
             
-        h = h * 31 + s.player;
         h = h * 31 + s.turn;
         return h;
     }
