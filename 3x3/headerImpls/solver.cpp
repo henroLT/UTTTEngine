@@ -9,10 +9,10 @@ Solver::~Solver() {
     delete head;
 }
 
-void threadFunc(lfqueue *list, std::unordered_map<stateTree*, int> &visit, std::mutex &mutt) {
+void Solver::threadFunc(lfqueue *list, std::unordered_map<stateTree*, int> &visit, std::mutex &mutt) {
     while(!list->isEmpty()) {
         stateTree *temp;
-        
+
         if (!list->pop(temp)) continue;
         {
             std::lock_guard<std::mutex> lock(mutt);
@@ -30,7 +30,7 @@ void threadFunc(lfqueue *list, std::unordered_map<stateTree*, int> &visit, std::
     }
 }
 
-std::vector<stateTree*> generateChildren(stateTree* thingy) {
+std::vector<stateTree*> Solver::generateChildren(stateTree* thingy) {
     std::vector<stateTree*> res;
 
     char board[SIZE][SIZE];
@@ -57,9 +57,18 @@ std::vector<stateTree*> generateChildren(stateTree* thingy) {
 
 void Solver::generateStates() {
     lfqueue *list = new lfqueue();
-    list->push(head->val);
-    // spawn threads to generate all game states with helper func
-    // use jthreads?
+    list->push(head);
+    
+    // For real paralleism with multi core
+    // const int numThreads = std::thread::hardware_concurrency();
+    const int numThreads = 15;
+    std::vector<std::jthread> workers;
+
+    for (int i = 0; i < numThreads; ++i) {
+        workers.emplace_back([list, this] {
+            threadFunc(list, visit, mutt);
+        });
+    }
 }
 
 std::pair<int,int> Solver::chooseBest() {
