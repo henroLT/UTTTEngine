@@ -1,6 +1,8 @@
 #pragma once
 
-#include "stateTree.hpp"
+#include "basics.hpp"
+#include "StateTree/stateTree.hpp"
+#include "LFQueue/lfqueue.hpp"
 
 class Solver {
     private:

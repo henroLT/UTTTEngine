@@ -1,4 +1,4 @@
-#include "headers/solver.hpp"
+#include "../headers/solver.hpp"
 
 
 Solver::Solver(const state &init) {
@@ -56,7 +56,7 @@ std::vector<stateTree*> Solver::generateChildren(stateTree* thingy) {
 }
 
 void Solver::generateStates() {
-    lfqueue *list = new lfqueue();
+    list = new lfqueue();
     list->push(head);
     
     // For real paralleism with multi core
@@ -65,12 +65,14 @@ void Solver::generateStates() {
     std::vector<std::jthread> workers;
 
     for (int i = 0; i < numThreads; ++i) {
-        workers.emplace_back([list, this] {
-            threadFunc(list, visit, mutt);
+        workers.emplace_back([this] {
+            threadFunc(this->list, visit, mutt);
         });
     }
 }
 
 std::pair<int,int> Solver::chooseBest() {
+    std::pair<int,int> move;
 
+    return move;
 }

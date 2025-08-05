@@ -1,5 +1,5 @@
-#include "headers/basics.hpp"
-#include "headers/solver.hpp"
+#include "../headers/basics.hpp"
+#include "../headers/solver.hpp"
 
 
 char BOARD[SIZE][SIZE] = {};
@@ -124,8 +124,8 @@ bool checkDraw (char board[SIZE][SIZE]) {
 
 void end() {
     std::cout << "\n\n\n";
-    std::cout << DRAW? "DRAW!\n" : 
-                (WIN == PLAYER)? "You win!\n" : "You Lose!\n";
+    std::cout << ((DRAW)? "DRAW!\n" : 
+                (WIN == PLAYER)? "You win!\n" : "You Lose!\n");
     std::cout << "Press a key to continue:\n";
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
@@ -161,7 +161,7 @@ void run() {
     while (1) {
         if (PLAYER == 'X') boardDisplay();
         else {
-            makeMove();
+            //makeMove();
             boardDisplay();
             if (checkWin(BOARD) || checkDraw(BOARD)) {
                 end();

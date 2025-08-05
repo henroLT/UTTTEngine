@@ -1,25 +1,11 @@
 #pragma once
 
-#include "basics.hpp"
-#include "stateTree.hpp"
+#include "../basics.hpp"
+#include "../StateTree/stateTree.hpp"
 
 struct node;
 struct pointer;
-
-class lfqueue {
-    private:
-        std::atomic<pointer> head;
-        std::atomic<pointer> tail;
-
-    public:
-        lfqueue();
-        ~lfqueue();
-        void push(stateTree* value);
-        bool pop(stateTree*& result);
-        bool front(stateTree*& result);
-        bool isEmpty();
-};
-
+struct state;
 
 struct pointer {
     node* ptr;
@@ -29,6 +15,7 @@ struct pointer {
         return ptr == other.ptr && count == other.count;
     }
 };
+
 struct node {
     stateTree* data;
     std::atomic<pointer> next;
