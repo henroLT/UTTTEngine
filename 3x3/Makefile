@@ -2,35 +2,41 @@ CXX := clang++
 CXXFLAGS := -std=c++20 -Wall -Wextra -O2 -pthread
 LDFLAGS := -latomic
 
-SRC_DIRS := src headerImpls
+SRC_DIRS := src headers/headerImpls
 OBJ_DIR := bin
 TARGET := $(OBJ_DIR)/TTC
 
 SRCS := $(foreach dir, $(SRC_DIRS), $(wildcard $(dir)/*.cpp))
-OBJS := $(patsubst %.cpp, $(OBJ_DIR)/%.o, $(notdir $(SRCS)))
+OBJS := $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(SRCS))
 
 INCLUDES := -Iheaders -Iheaders/LFQueue -Iheaders/StateTree
 
-# Default rule: remove and recreate bin, then build
-all: clean_bin $(TARGET)
+.PHONY: default log help clean clean_bin
 
-# Create target from object files
+default: clean_bin $(TARGET)
+	@echo "\033[1;4mMake successful - wait 2 seconds.\033[0m"
+	@sleep 2
+	@clear
+
+log: clean_bin $(TARGET)
+
+help:
+	@echo "\"make\" for general purpose build."
+	@echo "\"make log\" to make with logs kept."
+	@echo "\"make clean\" to clean."
+
 $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^ $(LDFLAGS)
 
-# Compile rule for src
-$(OBJ_DIR)/%.o: src/%.cpp | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: %.cpp | $(OBJ_DIR)
+	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-# Compile rule for headerImpls
-$(OBJ_DIR)/%.o: headerImpls/%.cpp | $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
-
-# Recreate bin/ directory every time
-clean_bin:
-	rm -rf $(OBJ_DIR)
+$(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
-# Clean object files and target
+clean_bin:
+	rm -rf $(OBJ_DIR)
+
 clean:
 	rm -rf $(OBJ_DIR)

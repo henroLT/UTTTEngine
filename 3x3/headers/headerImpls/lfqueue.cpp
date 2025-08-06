@@ -1,4 +1,4 @@
-#include "../headers/LFQueue/lfqueue.hpp"
+#include "../LFQueue/lfqueue.hpp"
 
 lfqueue::lfqueue() {
     node *dummy = new node(nullptr);

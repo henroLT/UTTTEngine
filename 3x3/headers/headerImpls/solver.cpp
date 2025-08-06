@@ -1,4 +1,4 @@
-#include "../headers/solver.hpp"
+#include "../solver.hpp"
 
 
 Solver::Solver(const state &init) {
