@@ -26,8 +26,6 @@ void Solver::threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &vi
             for (auto &c : childs) {
                 if (visit.find(c->val) == visit.end()) {
                     list->push(c);
-                } else {
-                    
                 }
             }
         }

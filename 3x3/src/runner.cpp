@@ -126,8 +126,8 @@ void end() {
     std::cout << "\n\n\n";
     std::cout << ((DRAW)? "DRAW!\n" : 
                 (WIN == PLAYER)? "You win!\n" : "You Lose!\n");
-    std::cout << "Press a key to continue:\n";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cout << "Press enter to continue:\n";
+    std::cin.get();
 }
 
 
