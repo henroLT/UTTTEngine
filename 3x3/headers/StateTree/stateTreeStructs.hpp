@@ -10,6 +10,10 @@ struct state {
         return turn == other.turn &&
                 memcmp(board, other.board, sizeof(board)) == 0;
     }
+
+    state() : turn(0) {
+        std::memset(board, '\0', sizeof(board));
+    }
 };
 
 template<>

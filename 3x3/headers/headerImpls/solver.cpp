@@ -44,11 +44,7 @@ void Solver::threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &vi
 
         {
             std::lock_guard<std::mutex> lock(mutt);
-            if (visit.find(temp->val) != visit.end()) {
-                std::cout << "Already visited (turn " << temp->val.turn << ")\n";
-                continue;
-            }
-            std::cout << "Inserting new state (turn " << temp->val.turn << ")\n";
+            if (visit.find(temp->val) != visit.end()) continue;
             visit[temp->val] = temp;
         }
 

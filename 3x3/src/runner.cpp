@@ -208,11 +208,9 @@ void run() {
 
 int main() {
     state begin;
-    begin.turn = 0;
-    for (int i = 0; i < SIZE; ++i) for (int u = 0; u < SIZE; ++u) begin.board[i][u] = '\0';
     solver = new Solver(begin);
     solver->generateStates();
-    std::cin.get();
+
     do {
         setup();
         run();
