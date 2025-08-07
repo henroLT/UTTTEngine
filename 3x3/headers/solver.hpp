@@ -7,11 +7,11 @@
 class Solver {
     private:
         stateTree *head;
-        std::unordered_map<stateTree*, int> visit;
+        std::unordered_map<state, stateTree*> visit;
         std::mutex mutt;
         lfqueue *list;
 
-        void threadFunc(lfqueue *list, std::unordered_map<stateTree*, int> &visit, std::mutex &mutt);
+        void threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &visit, std::mutex &mutt);
         std::vector<stateTree*> generateChildren(stateTree* thingy);
 
     public:

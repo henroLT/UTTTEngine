@@ -9,22 +9,26 @@ Solver::~Solver() {
     delete head;
 }
 
-void Solver::threadFunc(lfqueue *list, std::unordered_map<stateTree*, int> &visit, std::mutex &mutt) {
+void Solver::threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &visit, std::mutex &mutt) {
     while(!list->isEmpty()) {
         stateTree *temp;
 
         if (!list->pop(temp)) continue;
         {
             std::lock_guard<std::mutex> lock(mutt);
-            if (visit[temp]++) continue;
+            if (visit.find(temp->val) != visit.end()) continue;
+            visit[temp->val] = temp;
         }
 
         std::vector<stateTree*> childs = generateChildren(temp);
         {
             std::lock_guard<std::mutex> lock(mutt);
             for (auto &c : childs) {
-            
-                if (!visit[c]++) list->push(c);
+                if (visit.find(c->val) == visit.end()) {
+                    list->push(c);
+                } else {
+                    
+                }
             }
         }
     }
