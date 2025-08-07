@@ -18,7 +18,7 @@ struct std::hash<state> {
         size_t h = 0;
         for (int i = 0; i < SIZE; ++i)
             for (int j = 0; j < SIZE; ++j)
-                h = h * 31 + s.board[i][j];
+                h = h * 31 + static_cast<unsigned char>(s.board[i][j]);
             
         h = h * 31 + s.turn;
         return h;

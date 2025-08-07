@@ -6,6 +6,7 @@ char BOARD[SIZE][SIZE] = {};
 char PLAYER;
 char WIN;
 bool DRAW;
+Solver *solver;
 
 
 void wipe();            
@@ -159,15 +160,7 @@ void run() {
 
 
     while (1) {
-        if (PLAYER == 'X') boardDisplay();
-        else {
-            //makeMove();
-            boardDisplay();
-            if (checkWin(BOARD) || checkDraw(BOARD)) {
-                end();
-                break;
-            }
-        }
+        boardDisplay();
 
         std::pair<int,int> move;
         do {
@@ -201,11 +194,25 @@ void run() {
             end();
             break;
         }
+
+        // HERE WE CHOOSE MOVE FROM SOLVER CLASS
+
+        if (checkWin(BOARD) || checkDraw(BOARD)) {
+            boardDisplay();
+            end();
+            break;
+        }
     }
 }
 
 
 int main() {
+    state begin;
+    begin.turn = 0;
+    for (int i = 0; i < SIZE; ++i) for (int u = 0; u < SIZE; ++u) begin.board[i][u] = '\0';
+    solver = new Solver(begin);
+    solver->generateStates();
+    std::cin.get();
     do {
         setup();
         run();

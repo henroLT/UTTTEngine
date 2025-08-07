@@ -13,7 +13,7 @@ class Solver {
 
         void threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &visit, std::mutex &mutt);
         std::vector<stateTree*> generateChildren(stateTree* thingy);
-
+        bool isTerminal(const state& s);
     public:
         Solver(const state &init);
         ~Solver();
