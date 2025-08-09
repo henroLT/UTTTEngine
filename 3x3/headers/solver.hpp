@@ -17,7 +17,8 @@ class Solver {
     public:
         Solver(const state &init);
         ~Solver();
-
         void generateStates();
-        std::pair<int,int> chooseBest();
+        int eval(const state& s, char comp);
+        void weighPaths(stateTree* node, const char comp);
+        std::pair<int,int> chooseBest(const state &s);
 };

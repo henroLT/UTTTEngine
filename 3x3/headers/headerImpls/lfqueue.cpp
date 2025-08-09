@@ -1,5 +1,15 @@
 #include "../LFQueue/lfqueue.hpp"
 
+/*
+lfqueue();
+~lfqueue();
+void push(stateTree* value);
+bool pop(stateTree*& result);
+bool front(stateTree*& result);
+bool isEmpty();
+*/
+
+
 lfqueue::lfqueue() {
     node *dummy = new node(nullptr);
     pointer p = {dummy, 0};

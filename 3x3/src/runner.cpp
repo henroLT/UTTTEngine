@@ -8,50 +8,13 @@ char WIN;
 bool DRAW;
 Solver *solver;
 
-
-void wipe();            
+            
 void boardDisplay();    
-void displayRules();    
-bool checkWin();        
-bool checkDraw();       
+void displayRules();           
 void end();             
-void run();             
-void setup();           
+void run();                       
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-
-void wipe() {
-    #ifdef _WIN32
-        system("CLS");
-    #else
-        system("clear");
-    #endif
-}
-
-
-void setup() {
-    FOR(i, SIZE) FOR(j, SIZE) BOARD[i][j] = '\0';
-    PLAYER = '\0';
-    WIN = '\0';
-    DRAW = false;
-}
-
-
-void boardDisplay() {
-    wipe();
-    std::cout << "\033[1;4mGAME STATE\033[0m\n\n";
-
-    FOR(i, SIZE) {
-        FOR(u, SIZE) {
-            std::cout 
-                    << ((u == 0)? " " : "") 
-                    << ((BOARD[i][u] == '\0')? ' ' : BOARD[i][u]) 
-                    << ((u != SIZE - 1)? " | " : "");
-        }
-        std::cout << ((i != SIZE - 1)? "\n---+---+---\n" : "\n");
-    }
-}
-
 
 void displayRules() {
     wipe();
@@ -73,55 +36,20 @@ void displayRules() {
     wipe();
 }
 
-
-bool checkWin(char board[SIZE][SIZE]) {
-    char winner;
-    bool win = false;
+void boardDisplay() {
+    wipe();
+    std::cout << "\033[1;4mGAME STATE\033[0m\n\n";
 
     FOR(i, SIZE) {
-        if (board[i][0] != '\0' &&
-                board[i][0] == board[i][1] &&
-                board[i][1] == board[i][2]) {
-            winner = board[i][0];
-            win = true;
-            break;
+        FOR(u, SIZE) {
+            std::cout 
+                    << ((u == 0)? " " : "") 
+                    << ((BOARD[i][u] == '\0')? ' ' : BOARD[i][u]) 
+                    << ((u != SIZE - 1)? " | " : "");
         }
-        if (board[0][i] != '\0' &&
-                board[0][i] == board[1][i] &&
-                board[1][i] == board[2][i]) {
-            winner = board[0][i];
-            win = true;
-            break;
-        }
+        std::cout << ((i != SIZE - 1)? "\n---+---+---\n" : "\n");
     }
-
-    if (board[0][0] != '\0' &&
-            board[0][0] == board[1][1] &&
-            board[1][1] == board[2][2]) {
-        winner = board[0][0];
-        win = true;
-    }
-
-    else if (board[0][2] != '\0' &&
-                board[0][2] == board[1][1] &&
-                board[1][1] == board[2][0]) {
-        winner = board[1][1];
-        win = true;
-    }
-
-    if (win) WIN = winner;
-
-    return win;
 }
-
-
-bool checkDraw (char board[SIZE][SIZE]) {
-    FOR (i, SIZE) FOR(j, SIZE) if (board[i][j] == '\0') return false;
-
-    DRAW = true;
-    return true;
-}
-
 
 void end() {
     std::cout << "\n\n\n";
@@ -132,7 +60,7 @@ void end() {
 }
 
 
-void run() {
+void run(bool& weighedPaths) {
     displayRules();
 
     do {
@@ -158,6 +86,10 @@ void run() {
         std::cout << "Invalid input. Please enter \"X\" or \"O\",\n";
     } while (1);
 
+    if (!weighedPaths) {
+        solver->weighPaths(PLAYER);
+        weighedPaths = true;
+    }
 
     while (1) {
         boardDisplay();
@@ -210,10 +142,12 @@ int main() {
     state begin;
     solver = new Solver(begin);
     solver->generateStates();
+    
+    bool pathsWeighed = false;
 
     do {
         setup();
-        run();
+        run(pathsWeighed);
         wipe();
         std::cout << "\033[1;4mThanks for playing!\033[0m\n\n";
         std::cout << "\033[4mPress Q to quit, or any other button to play again: \033[0m\n\n";

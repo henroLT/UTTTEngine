@@ -7,6 +7,7 @@ struct stateTree {
     state val;
     stateTree *parent;
     std::vector<stateTree*> children;
+    int score = 0;
 
     stateTree(const state &value, stateTree *parentNode = nullptr) : 
         val(value), parent(parentNode){}

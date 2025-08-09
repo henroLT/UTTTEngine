@@ -19,3 +19,8 @@ extern char BOARD[SIZE][SIZE];
 extern char PLAYER;
 extern char WIN;
 extern bool DRAW;
+
+bool checkWin(const char board[SIZE][SIZE]);
+bool checkDraw(const char board[SIZE][SIZE]);
+void setup();
+void wipe(); 
