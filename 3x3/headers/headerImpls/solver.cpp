@@ -110,10 +110,8 @@ Solver::~Solver() {
 void Solver::generateStates() {
     list = new lfqueue();
     list->push(head);
-    
-    // For real paralleism with multi core
-    // const int numThreads = std::thread::hardware_concurrency();
-    const int numThreads = 15;
+
+    const int numThreads = coresAvail();
 
     {
         std::vector<std::jthread> workers;

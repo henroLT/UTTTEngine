@@ -10,6 +10,11 @@
 #include <cstring>
 #include <mutex>
 
+#ifdef _WIN32
+#else
+    #include <unistd.h>
+#endif
+
 #define FOR(x, n) for (int x = 0; x < n; ++x)
 #define SIZE 3
 #define row(a) a.first
@@ -24,3 +29,4 @@ bool checkWin(const char board[SIZE][SIZE]);
 bool checkDraw(const char board[SIZE][SIZE]);
 void setup();
 void wipe(); 
+int coresAvail();

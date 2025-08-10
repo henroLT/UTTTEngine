@@ -5,6 +5,7 @@ bool checkWin(const char board[SIZE][SIZE]);
 bool checkDraw(const char board[SIZE][SIZE]);
 void setup();
 void wipe();
+void coresAvail();
 */
 
 
@@ -71,4 +72,13 @@ void setup() {
     PLAYER = '\0';
     WIN = '\0';
     DRAW = false;
+}
+
+int coresAvail() {
+    #ifdef _WIN32
+        return static_cast<int>(std::thread::hardware_concurrency());
+    #else
+        long nprocs = sysconf(_SC_NPROCESSORS_ONLN);
+        return (nprocs > 0)? static_cast<int>(nprocs) : 1;
+    #endif
 }
