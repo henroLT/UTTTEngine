@@ -87,7 +87,8 @@ void run(bool& weighedPaths) {
     } while (1);
 
     if (!weighedPaths) {
-        solver->weighPaths(PLAYER);
+        state temp;
+        solver->weighPaths(temp, PLAYER);
         weighedPaths = true;
     }
 

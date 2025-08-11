@@ -39,7 +39,12 @@ void Solver::threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &vi
             for (auto &c : childs) {
                 if (visit.find(c->val) == visit.end()) {
                     list->push(c);
-                } else delete c;
+                    temp->children.push_back(c);
+                    c->parents.push_back(temp);
+                } else {
+                    visit[c->val]->parents.push_back(temp);
+                    delete c;
+                }
             }
         }
     }
@@ -63,7 +68,7 @@ std::vector<stateTree*> Solver::generateChildren(stateTree* thingy) {
                 a.board[i][u] = currentPlayer;
                 a.turn = thingy->val.turn + 1;
 
-                stateTree* child = new stateTree(a, thingy);
+                stateTree* child = new stateTree(a);
                 res.push_back(child);
             }
         }
@@ -95,34 +100,6 @@ bool Solver::isTerminal(const state& s) {
     return true;
 }
 
-
-/***********************  PUBLIC  ********************************** */
-
-
-Solver::Solver(const state &init) {
-    head = new stateTree(init);
-}
-
-Solver::~Solver() {
-    delete head;
-}
-
-void Solver::generateStates() {
-    list = new lfqueue();
-    list->push(head);
-
-    const int numThreads = coresAvail();
-
-    {
-        std::vector<std::jthread> workers;
-        for (int i = 0; i < numThreads; ++i) {
-            workers.emplace_back([this] {
-                threadFunc(this->list, visit, mutt);
-            });
-        }
-    }
-}
-
 int Solver::eval(const state& s, const char comp) {
     char (*board)[SIZE] = (char(*)[SIZE]) s.board;
 
@@ -150,6 +127,33 @@ void Solver::weighPaths(stateTree* node, const char comp) {
         return;
     }
 
+}
+
+/***********************  PUBLIC  ********************************** */
+
+
+Solver::Solver(const state &init) {
+    head = new stateTree(init);
+}
+
+Solver::~Solver() {
+    delete head;
+}
+
+void Solver::generateStates() {
+    list = new lfqueue();
+    list->push(head);
+
+    const int numThreads = coresAvail();
+
+    {
+        std::vector<std::jthread> workers;
+        for (int i = 0; i < numThreads; ++i) {
+            workers.emplace_back([this] {
+                threadFunc(this->list, visit, mutt);
+            });
+        }
+    }
 }
 
 std::pair<int,int> Solver::chooseBest(const state &s) {

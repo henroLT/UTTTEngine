@@ -5,16 +5,11 @@
 
 struct stateTree {
     state val;
-    stateTree *parent;
+    std::vector<stateTree*> parents;
     std::vector<stateTree*> children;
     int score = 0;
 
-    stateTree(const state &value, stateTree *parentNode = nullptr) : 
-        val(value), parent(parentNode){}
+    explicit stateTree(const state &v) :
+        val(v), score(0) {};
 
-    ~stateTree() {
-        for (stateTree* child : children) {
-            delete child;
-        }
-    }
 };
