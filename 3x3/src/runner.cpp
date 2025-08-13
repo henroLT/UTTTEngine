@@ -57,6 +57,7 @@ void end() {
                 (WIN == PLAYER)? "You win!\n" : "You Lose!\n");
     std::cout << "Press enter to continue:\n";
     std::cin.get();
+    std::cin.ignore(INT_MAX, '\n');
 }
 
 
