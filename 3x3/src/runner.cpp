@@ -87,9 +87,11 @@ void run(bool& weighedPaths) {
     } while (1);
 
     if (!weighedPaths) {
-        state temp;
-        solver->weighPaths(temp, PLAYER);
+        std::unordered_map<state, bool> dummyVisit;
+        solver->weighPaths(solver->getHead(), PLAYER, dummyVisit);
         weighedPaths = true;
+        std::cout << solver->getHead()->children[1]->score;
+        std::cin.get();
     }
 
     while (1) {

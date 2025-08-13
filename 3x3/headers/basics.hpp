@@ -19,14 +19,16 @@
 #define SIZE 3
 #define row(a) a.first
 #define col(a) a.second
+#define INT_MAX 2'147'483'647
+#define INT_MIN -2'147'483'648
 
 extern char BOARD[SIZE][SIZE];
 extern char PLAYER;
 extern char WIN;
 extern bool DRAW;
 
-bool checkWin(const char board[SIZE][SIZE]);
-bool checkDraw(const char board[SIZE][SIZE]);
+bool checkWin(char board[SIZE][SIZE]);
+bool checkDraw(char board[SIZE][SIZE]);
 void setup();
 void wipe(); 
 int coresAvail();

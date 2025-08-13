@@ -14,8 +14,8 @@ INCLUDES := -Iheaders -Iheaders/LFQueue -Iheaders/StateTree
 .PHONY: default log help clean clean_bin
 
 default: clean_bin $(TARGET)
-	@echo "\033[1;4mMake successful - wait 2 seconds.\033[0m"
-	@sleep 2
+	@echo "\033[1;4mMake successful - wait 1 second.\033[0m"
+	@sleep 1
 	@clear
 
 log: clean_bin $(TARGET)
@@ -40,3 +40,6 @@ clean_bin:
 
 clean:
 	rm -rf $(OBJ_DIR)
+	@echo "\033[1;4mClean successful - wait 1 seconds.\033[0m"
+	@sleep 1
+	@clear
