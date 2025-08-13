@@ -37,9 +37,9 @@ void Solver::threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &vi
 
         {
             std::lock_guard<std::mutex> lock(mutt);
-            if (visit.find(temp->val) != visit.end()) {
+            if (visit.find(temp->val) == visit.end()) {
                 delete temp;
-                continue;
+                return;
             }
             visit[temp->val] = temp;
         }
