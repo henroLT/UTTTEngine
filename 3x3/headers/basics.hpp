@@ -9,6 +9,7 @@
 #include <functional>
 #include <cstring>
 #include <mutex>
+#include <set>
 
 #ifdef _WIN32
 #else

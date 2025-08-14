@@ -12,7 +12,7 @@ class Solver {
         lfqueue *list;
 
         int cntMoves(const state &s);
-        void threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &visit, std::mutex &mutt);
+        void threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &visit);
         std::vector<stateTree*> generateChildren(stateTree* thingy);
         bool isTerminal(const state& s);
         int eval(const state& s, char comp);

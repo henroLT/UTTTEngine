@@ -25,7 +25,7 @@ int Solver::cntMoves(const state &s) {
 }
 
 
-void Solver::threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &visit, std::mutex &mutt) {
+void Solver::threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &visit) {
     while(true) {
         stateTree *temp;
 
@@ -35,30 +35,30 @@ void Solver::threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &vi
             continue;    
         }
 
-        {
-            std::lock_guard<std::mutex> lock(mutt);
-            if (visit.find(temp->val) == visit.end()) {
-                delete temp;
-                return;
-            }
-            visit[temp->val] = temp;
-        }
-
-
         std::vector<stateTree*> childs = generateChildren(temp);
-        {
-            std::lock_guard<std::mutex> lock(mutt);
-            for (auto &c : childs) {
+
+        for (auto& c : childs) {
+            bool seen = true;
+            {
+                std::lock_guard<std::mutex> lock(mutt);
                 if (visit.find(c->val) == visit.end()) {
                     visit[c->val] = c;
                     list->push(c);
-                    temp->children.push_back(c);
-                    c->parents.push_back(temp);
-                } else {
-                    visit[c->val]->parents.push_back(temp);
-                    temp->children.push_back(visit[c->val]);
-                    delete c;
+                    temp->children.insert(c);
+                    c->parents.insert(temp);
+                    seen = false;
                 }
+            }
+            if (seen) {
+                {
+                    std::lock_guard<std::mutex> lock(visit[c->val]->nodeMutt);
+                    visit[c->val]->parents.insert(temp);
+                }
+                {
+                    std::lock_guard<std::mutex> lock(temp->nodeMutt);
+                    temp->children.insert(visit[c->val]);
+                }
+                delete c;
             }
         }
     }
@@ -157,7 +157,7 @@ void Solver::generateStates() {
         std::vector<std::jthread> workers;
         for (int i = 0; i < numThreads; ++i) {
             workers.emplace_back([this] {
-                threadFunc(this->list, visit, mutt);
+                threadFunc(this->list, visit);
             });
         }
     }
