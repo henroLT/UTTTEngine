@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../basics.hpp"
-#include "stateTreeStructs.hpp"
+#include "state.hpp"
 
 struct stateTree {
     state val;
@@ -9,7 +9,6 @@ struct stateTree {
     std::vector<stateTree*> children;
     int score = 0;
 
-    explicit stateTree(const state &v) :
-        val(v), score(0) {};
-
+    explicit stateTree(const state& s) : val(s) {};
+    
 };
