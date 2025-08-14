@@ -5,10 +5,11 @@
 
 struct stateTree {
     state val;
-    std::vector<stateTree*> parents;
-    std::vector<stateTree*> children;
+    std::set<stateTree*> parents;
+    std::set<stateTree*> children;
     int score = 0;
+    std::mutex nodeMutt;
 
     explicit stateTree(const state& s) : val(s) {};
-    
+
 };
