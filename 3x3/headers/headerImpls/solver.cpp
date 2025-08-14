@@ -6,13 +6,13 @@ private:
     void threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &visit, std::mutex &mutt);
     std::vector<stateTree*> generateChildren(stateTree* thingy);
     bool isTerminal(const state& s);
+    void weighPaths();
 public:
     Solver(const state &init);
     ~Solver();
-    stateTree* getHead();
     void generateStates();
     int eval(const state& s);
-    void weighPaths();
+    void startWeighPaths();
     std::pair<int,int> chooseBest();
 */
 
@@ -131,40 +131,6 @@ int Solver::eval(const state& s, const char comp) {
 
 }
 
-
-/**********************************  PUBLIC  ************************************* */
-
-
-Solver::Solver(const state &init) {
-    head = new stateTree(init);
-}
-
-Solver::~Solver() {
-    delete head;
-}
-
-stateTree* Solver::getHead() {
-    return head;
-}
-
-void Solver::generateStates() {
-    list = new lfqueue();
-    list->push(head);
-
-    const int numThreads = coresAvail();
-
-    {
-        std::vector<std::jthread> workers;
-        for (int i = 0; i < numThreads; ++i) {
-            workers.emplace_back([this] {
-                threadFunc(this->list, visit);
-            });
-        }
-    }
-    std::cout << visit.size();
-    std::cin.get();
-}
-
 void Solver::weighPaths(stateTree* node, const char comp, std::unordered_map<state, bool>& seen) {  
     //if (seen[node->val]) return;
     //std::cout << "Weighing turn " << node->val.turn << ", children: " << node->children.size() << "\n";
@@ -190,6 +156,42 @@ void Solver::weighPaths(stateTree* node, const char comp, std::unordered_map<sta
     //}
 //
     //seen[node->val] = true;
+}
+
+
+
+/**********************************  PUBLIC  ************************************* */
+
+
+Solver::Solver(const state &init) {
+    head = new stateTree(init);
+    visit[head->val] = head;
+}
+
+Solver::~Solver() {
+    delete head;
+}
+
+void Solver::generateStates() {
+    list = new lfqueue();
+    list->push(head);
+
+    const int numThreads = coresAvail();
+
+    {
+        std::vector<std::jthread> workers;
+        for (int i = 0; i < numThreads; ++i) {
+            workers.emplace_back([this] {
+                threadFunc(this->list, visit);
+            });
+        }
+    }
+    std::cout << visit.size();
+    std::cin.get();
+}
+
+void Solver::startWeighPaths(const char comp, std::unordered_map<state, bool>& seen) {
+    weighPaths(head, comp, seen);
 }
 
 std::pair<int,int> Solver::chooseBest(const state &s, char comp) {
