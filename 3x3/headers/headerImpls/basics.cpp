@@ -5,8 +5,14 @@ bool checkWin(const char board[SIZE][SIZE]);
 bool checkDraw(const char board[SIZE][SIZE]);
 void setup();
 void wipe();
-void coresAvail();
 */
+
+#ifdef _WIN32
+    int procs =  = static_cast<int>(std::thread::hardware_concurrency());
+#else
+    long nprocs = sysconf(_SC_NPROCESSORS_ONLN);
+    int procs = (nprocs > 0)? static_cast<int>(nprocs) : 1;
+#endif
 
 
 bool checkWin(char board[SIZE][SIZE]) {

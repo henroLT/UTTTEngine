@@ -25,11 +25,11 @@
 #define INT_MIN -2'147'483'648
 
 #ifdef _WIN32
-    int procs = static_cast<int>(std::thread::hardware_concurrency());
+    extern int procs;
     #define CORES procs
 #else
-    int nprocs = sysconf(_SC_NPROCESSORS_ONLN);
-    int procs = (nprocs > 0)? static_cast<int>(nprocs) : 1;
+    extern long nprocs;
+    extern int procs;
     #define CORES procs
 #endif
 

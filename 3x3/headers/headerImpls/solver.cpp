@@ -69,7 +69,7 @@ std::vector<stateTree*> Solver::generateChildren(stateTree* thingy) {
     
     std::vector<stateTree*> res;
 
-    char currentPlayer = (cntMoves(thingy->val) % 2 != 0) ? 'X' : 'O';
+    char currentPlayer = (cntMoves(thingy->val) % 2 == 0) ? 'X' : 'O';
 
     for (int i = 0; i < SIZE; ++i) {
         for (int u = 0; u < SIZE; ++u) {

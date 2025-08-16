@@ -12,7 +12,7 @@ Solver *solver;
 void boardDisplay();    
 void displayRules();           
 void end();             
-void run();                       
+void run(bool& weighedPaths);                       
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
