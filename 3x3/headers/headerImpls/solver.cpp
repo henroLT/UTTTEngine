@@ -69,7 +69,7 @@ std::vector<stateTree*> Solver::generateChildren(stateTree* thingy) {
     
     std::vector<stateTree*> res;
 
-    char currentPlayer = (cntMoves(thingy->val) % 2 == 0) ? 'X' : 'O';
+    char currentPlayer = (cntMoves(thingy->val) % 2 != 0) ? 'X' : 'O';
 
     for (int i = 0; i < SIZE; ++i) {
         for (int u = 0; u < SIZE; ++u) {
@@ -176,16 +176,16 @@ void Solver::generateStates() {
     list = new lfqueue();
     list->push(head);
 
-    const int numThreads = coresAvail();
-
     {
         std::vector<std::jthread> workers;
-        for (int i = 0; i < numThreads; ++i) {
+        for (int i = 0; i < CORES; ++i) {
             workers.emplace_back([this] {
                 threadFunc(this->list, visit);
             });
         }
     }
+
+    delete list;
     std::cout << visit.size();
     std::cin.get();
 }
