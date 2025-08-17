@@ -11,7 +11,7 @@ struct state {
     }
 
     bool operator==(const state& s) const {
-        return std::memcmp(board, s.board, sizeof(board));
+        return std::memcmp(board, s.board, sizeof(board)) == 0;
     }
 };
 
