@@ -11,15 +11,14 @@ class Solver {
         std::mutex mutt;
         lfqueue *list;
 
-        int cntMoves(const state &s);
         void threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &visit);
         std::vector<stateTree*> generateChildren(stateTree* thingy);
-        int eval(const state& s, char comp);
-        void weighPaths(stateTree* node, const char comp, std::unordered_map<state, bool>& seen);
+        int eval(const state& s);
+        void weighPaths(stateTree* node, std::unordered_map<state, bool>& seen);
     public:
         Solver(const state &init);
         ~Solver();
         void generateStates();
-        void startWeighPaths(const char comp, std::unordered_map<state, bool>& seen);
-        std::pair<int,int> chooseBest(const state &s, char comp);
+        void startWeighPaths(std::unordered_map<state, bool>& seen);
+        std::pair<int,int> chooseBest(const state &s);
 };

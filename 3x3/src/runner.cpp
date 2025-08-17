@@ -86,12 +86,12 @@ void run(bool& weighedPaths) {
 
         std::cout << "Invalid input. Please enter \"X\" or \"O\",\n";
     } while (1);
-
-    if (!weighedPaths) {
-        std::unordered_map<state, bool> dummyVisit;
-        solver->startWeighPaths(PLAYER, dummyVisit);
-        weighedPaths = true;
-    }
+    
+    //if (!weighedPaths) {
+    //    std::unordered_map<state, bool> dummyVisit;
+    //    solver->startWeighPaths(dummyVisit);
+    //    weighedPaths = true;
+    //}
 
     while (1) {
         boardDisplay();
