@@ -115,9 +115,10 @@ void Solver::weighPaths(stateTree* node, const char comp, std::unordered_map<sta
     if (scr != 0) node->score = scr;
     else {
         // calculate the worth of the non terminal node, sum children or find best ig, or worse
-        char justPlayed = (cntMoves(dummy) % 2 == 0)? 'O' : 'X';
-
+        char nxtMove = (cntMoves(dummy) % 2 == 0)? 'X' : 'O';
+        bool optimize = nxtMove == comp;
         
+
     }
     
     seen[node->val] = true;
