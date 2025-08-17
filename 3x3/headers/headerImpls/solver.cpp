@@ -5,13 +5,12 @@ private:
     int cntMoves(const state &s);
     void threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &visit, std::mutex &mutt);
     std::vector<stateTree*> generateChildren(stateTree* thingy);
-    bool isTerminal(const state& s);
+    int eval(const state& s);
     void weighPaths();
 public:
     Solver(const state &init);
     ~Solver();
     void generateStates();
-    int eval(const state& s);
     void startWeighPaths();
     std::pair<int,int> chooseBest();
 */
@@ -65,7 +64,7 @@ void Solver::threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &vi
 }
 
 std::vector<stateTree*> Solver::generateChildren(stateTree* thingy) {
-    if (isTerminal(thingy->val)) return {};
+    if (eval(thingy->val, 'X') == 0) return {};
     
     std::vector<stateTree*> res;
 
@@ -87,29 +86,6 @@ std::vector<stateTree*> Solver::generateChildren(stateTree* thingy) {
     return res;
 }
 
-bool Solver::isTerminal(const state& s) {
-    char (*board)[SIZE] = (char(*)[SIZE]) s.board;
-
-    for (int i = 0; i < SIZE; ++i) {
-        if (board[i][0] != '\0' && board[i][0] == board[i][1] && board[i][1] == board[i][2])
-            return true;
-        if (board[0][i] != '\0' && board[0][i] == board[1][i] && board[1][i] == board[2][i])
-            return true;
-    }
-
-    if (board[0][0] != '\0' && board[0][0] == board[1][1] && board[1][1] == board[2][2])
-        return true;
-
-    if (board[0][2] != '\0' && board[0][2] == board[1][1] && board[1][1] == board[2][0])
-        return true;
-
-    for (int i = 0; i < SIZE; ++i)
-        for (int j = 0; j < SIZE; ++j)
-            if (board[i][j] == '\0') return false;
-
-    return true;
-}
-
 int Solver::eval(const state& s, const char comp) {
     char (*board)[SIZE] = (char(*)[SIZE]) s.board;
 
@@ -128,34 +104,23 @@ int Solver::eval(const state& s, const char comp) {
         return board[0][2] == comp ? +1 : -1;
 
     return 0;
-
 }
 
 void Solver::weighPaths(stateTree* node, const char comp, std::unordered_map<state, bool>& seen) {  
-    //if (seen[node->val]) return;
-    //std::cout << "Weighing turn " << node->val.turn << ", children: " << node->children.size() << "\n";
-//
-    //for (auto* child : node->children) weighPaths(child, comp, seen);
-//
-    //if (isTerminal(node->val)) node->score = eval(node->val, comp);
-    //else {
-    //    char nextPlayer = (node->val.turn % 2 == 0) ? 'X' : 'O';
-    //    bool compTurn = (nextPlayer == comp);
-//
-    //    node->score = compTurn ? INT_MIN : INT_MAX;
-//
-    //    for (auto* child : node->children) {
-    //        if (compTurn) {
-    //            node->score = std::max(node->score, child->score);
-    //        } else {
-    //            node->score = std::min(node->score, child->score);
-    //        }
-    //    }
-//
-    //    std::cout << "Internal node score: " << node->score << "\n";
-    //}
-//
-    //seen[node->val] = true;
+    state dummy = node->val;
+    if (seen[dummy]) return;
+    for (auto& c : node->children) weighPaths(c, comp, seen);
+
+    int scr = eval(dummy, comp);
+    if (scr != 0) node->score = scr;
+    else {
+        // calculate the worth of the non terminal node, sum children or find best ig, or worse
+        char justPlayed = (cntMoves(dummy) % 2 == 0)? 'O' : 'X';
+
+        
+    }
+    
+    seen[node->val] = true;
 }
 
 
@@ -186,8 +151,17 @@ void Solver::generateStates() {
     }
 
     delete list;
-    std::cout << visit.size();
-    std::cin.get();
+    //std::cout << visit.size();
+    //for (auto& [key, value] : visit) {
+    //    for (int i = 0; i < 3; i++) {
+    //        for (int j = 0; j < 3; j++) {
+    //            std::cout << key.board[i][j] << ' ';
+    //        }
+    //        std::cout << '\n';
+    //    }
+    //    std::cout << "-----\n"; // separator between boards
+    //}   
+    //std::cin.get();
 }
 
 void Solver::startWeighPaths(const char comp, std::unordered_map<state, bool>& seen) {
