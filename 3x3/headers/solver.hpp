@@ -14,11 +14,11 @@ class Solver {
         void threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &visit);
         std::vector<stateTree*> generateChildren(stateTree* thingy);
         int eval(const state& s);
+        void weighPaths(stateTree* node, std::unordered_map<state, bool>& seen);
         
     public:
         Solver(const state &init);
         ~Solver();
-        void weighPaths(stateTree* node, std::unordered_map<state, bool>& seen,  std::ofstream* out);
         void generateStates();
         void startWeighPaths(std::unordered_map<state, bool>& seen);
         void chooseBest();

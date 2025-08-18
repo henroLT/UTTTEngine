@@ -1,20 +1,17 @@
-#pragma once
 #include "../solver.hpp"
-#include <fstream>
 
 /*
 private:
-    int cntMoves(const state &s);
-    void threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &visit, std::mutex &mutt);
+    void threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &visit);
     std::vector<stateTree*> generateChildren(stateTree* thingy);
     int eval(const state& s);
-    void weighPaths();
+    void weighPaths(stateTree* node, std::unordered_map<state, bool>& seen);
 public:
     Solver(const state &init);
     ~Solver();
     void generateStates();
-    void startWeighPaths();
-    std::pair<int,int> chooseBest();
+    void startWeighPaths(std::unordered_map<state, bool>& seen);
+    void chooseBest();
 */
 
 
@@ -104,12 +101,12 @@ int Solver::eval(const state& s) {
     return -2;
 }
 
-void Solver::weighPaths(stateTree* node, std::unordered_map<state, bool>& seen,  std::ofstream* out) {  
+void Solver::weighPaths(stateTree* node, std::unordered_map<state, bool>& seen) {  
     state dummy = node->val;
     if (seen[dummy]) return;
     seen[node->val] = true;
 
-    for (auto& c : node->children) weighPaths(c, seen, out);
+    for (auto& c : node->children) weighPaths(c, seen);
 
     int scr = eval(dummy);
     if (scr != -2) node->score = static_cast<double>(scr);
@@ -132,19 +129,6 @@ void Solver::weighPaths(stateTree* node, std::unordered_map<state, bool>& seen, 
         for (const auto& c : node->children) sum += c->score;
 
         node->score = sum / numChild;
-    }
-
-    // --- Print board and score ---
-    if (out) { // only write if file pointer provided
-        *out << "Board (turn " << node->turn << "):\n";
-        for (int i = 0; i < SIZE; ++i) {
-            for (int j = 0; j < SIZE; ++j) {
-                char c = node->val.board[i][j];
-                *out << (c == '\0' ? '.' : c) << ' ';
-            }
-            *out << '\n';
-        }
-        *out << "Score: " << node->score << "\n\n";
     }
 }
 
@@ -182,10 +166,7 @@ void Solver::generateStates() {
 }
 
 void Solver::startWeighPaths(std::unordered_map<state, bool>& seen) {
-    std::ofstream file("output.txt");
-    weighPaths(head, seen, &file);
-    file.close();
-
+    weighPaths(head, seen);
 }
 
 void Solver::chooseBest() {

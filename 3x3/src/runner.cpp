@@ -162,6 +162,7 @@ int main() {
     } while(1);
 
     wipe();
+    delete solver;
     std::cout << "\033[1;4mSee you next time!\033[0m\n\n";
 
     return 0;

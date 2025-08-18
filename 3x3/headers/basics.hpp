@@ -33,7 +33,6 @@
     #define CORES procs
 #endif
 
-
 extern char BOARD[SIZE][SIZE];
 extern char PLAYER;
 extern char WIN;
