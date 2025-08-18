@@ -130,6 +130,7 @@ void run(bool& weighedPaths) {
         }
 
         // HERE WE CHOOSE MOVE FROM SOLVER CLASS
+        solver->chooseBest();
 
         if (checkWin(BOARD) || checkDraw(BOARD)) {
             boardDisplay();
@@ -141,13 +142,14 @@ void run(bool& weighedPaths) {
 
 
 int main() {
-    state begin;
-    solver = new Solver(begin);
-    solver->generateStates();
-    
-    bool pathsWeighed = false;
 
     do {
+        state begin;
+        solver = new Solver(begin);
+        solver->generateStates();
+    
+        bool pathsWeighed = false;
+
         setup();
         run(pathsWeighed);
         wipe();
@@ -156,6 +158,7 @@ int main() {
         std::string again;
         std::cin >> again;
         if (again == "Q") break;
+        delete solver;
     } while(1);
 
     wipe();

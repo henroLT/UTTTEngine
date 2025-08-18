@@ -38,15 +38,10 @@ void Solver::threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &vi
                     visit[c->val] = c;
                     list->push(c);
                     temp->children.insert(c);
-                    c->parents.insert(temp);
                     seen = false;
                 }
             }
             if (seen) {
-                {
-                    std::lock_guard<std::mutex> lock(visit[c->val]->nodeMutt);
-                    visit[c->val]->parents.insert(temp);
-                }
                 {
                     std::lock_guard<std::mutex> lock(temp->nodeMutt);
                     temp->children.insert(visit[c->val]);
@@ -119,32 +114,38 @@ void Solver::weighPaths(stateTree* node, std::unordered_map<state, bool>& seen, 
     int scr = eval(dummy);
     if (scr != -2) node->score = static_cast<double>(scr);
     else {
-        bool compTurn = (node->turn % 2 == 0)? (PLAYER == 'X') : (PLAYER == 'O');
-        auto it = node->children.begin();
-        node->score = (*it++)->score;
-            
-        if (compTurn) 
-            for (; it != node->children.end(); ++it)
-                node->score = std::max(node->score, (*it)->score);
+        //bool compTurn = (node->turn % 2 == 0)? (PLAYER == 'X') : (PLAYER == 'O');
+        //auto it = node->children.begin();
+        //node->score = (*it++)->score;
+        //    
+        //if (compTurn) 
+        //    for (; it != node->children.end(); ++it)
+        //        node->score = std::max(node->score, (*it)->score);
 
-        else 
-            for (; it != node->children.end(); ++it)
-                node->score = std::min(node->score, (*it)->score);
+        //else 
+        //    for (; it != node->children.end(); ++it)
+        //        node->score = std::min(node->score, (*it)->score);
         
+        //average method for now
+        double sum = 0.0;
+        double numChild = static_cast<double>(node->children.size());
+        for (const auto& c : node->children) sum += c->score;
+
+        node->score = sum / numChild;
     }
 
-    //// --- Print board and score ---
-    //if (out) { // only write if file pointer provided
-    //    *out << "Board (turn " << node->turn << "):\n";
-    //    for (int i = 0; i < SIZE; ++i) {
-    //        for (int j = 0; j < SIZE; ++j) {
-    //            char c = node->val.board[i][j];
-    //            *out << (c == '\0' ? '.' : c) << ' ';
-    //        }
-    //        *out << '\n';
-    //    }
-    //    *out << "Score: " << node->score << "\n\n";
-    //}
+    // --- Print board and score ---
+    if (out) { // only write if file pointer provided
+        *out << "Board (turn " << node->turn << "):\n";
+        for (int i = 0; i < SIZE; ++i) {
+            for (int j = 0; j < SIZE; ++j) {
+                char c = node->val.board[i][j];
+                *out << (c == '\0' ? '.' : c) << ' ';
+            }
+            *out << '\n';
+        }
+        *out << "Score: " << node->score << "\n\n";
+    }
 }
 
 
@@ -158,7 +159,10 @@ Solver::Solver(const state &init) {
 }
 
 Solver::~Solver() {
-    delete head;
+    for (auto it = visit.begin(); it != visit.end(); ) {
+        delete it->second;
+        it = visit.erase(it);
+    }
 }
 
 void Solver::generateStates() {
@@ -184,5 +188,13 @@ void Solver::startWeighPaths(std::unordered_map<state, bool>& seen) {
 
 }
 
-std::pair<int,int> Solver::chooseBest(const state &s) {
+void Solver::chooseBest() {
+    // find the best move (highest rated)
+    state temp(BOARD);
+    state best = (*(visit[temp]->children.begin()))->val;
+    for (const auto& c : visit[temp]->children)
+        if (visit[best]->score < c->score)
+            best = c->val;
+    
+    memcpy(BOARD, best.board, sizeof(BOARD));
 }

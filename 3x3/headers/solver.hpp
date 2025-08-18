@@ -21,5 +21,5 @@ class Solver {
         void weighPaths(stateTree* node, std::unordered_map<state, bool>& seen,  std::ofstream* out);
         void generateStates();
         void startWeighPaths(std::unordered_map<state, bool>& seen);
-        std::pair<int,int> chooseBest(const state &s);
+        void chooseBest();
 };

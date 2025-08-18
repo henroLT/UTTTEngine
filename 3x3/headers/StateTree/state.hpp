@@ -10,6 +10,10 @@ struct state {
         std::memset(board, '\0', sizeof(board));
     }
 
+    state(const char other[SIZE][SIZE]) {
+        std::memcpy(board, other, sizeof(board));
+    }
+
     bool operator==(const state& s) const {
         return std::memcmp(board, s.board, sizeof(board)) == 0;
     }
