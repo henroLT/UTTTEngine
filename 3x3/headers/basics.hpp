@@ -10,6 +10,7 @@
 #include <cstring>
 #include <mutex>
 #include <set>
+#include <chrono>
 
 #ifdef _WIN32
 #else

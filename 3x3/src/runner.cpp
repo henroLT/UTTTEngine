@@ -93,6 +93,9 @@ void run(bool& weighedPaths) {
         weighedPaths = true;
     }
 
+    if (PLAYER == 'O') solver->chooseBest();
+    
+
     while (1) {
         boardDisplay();
 

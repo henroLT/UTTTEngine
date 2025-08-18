@@ -22,6 +22,7 @@ void Solver::threadFunc(lfqueue *list, std::unordered_map<state, stateTree*> &vi
         if (!list->pop(temp)){
             std::this_thread::yield();
             if (list->isEmpty()) break;
+            if (visit.size() == 5478) break;
             continue;    
         }
 
@@ -102,8 +103,8 @@ int Solver::eval(const state& s) {
 }
 
 void Solver::weighPaths(stateTree* node, std::unordered_map<state, bool>& seen) {  
+    if (seen[node->val]) return;
     state dummy = node->val;
-    if (seen[dummy]) return;
     seen[node->val] = true;
 
     for (auto& c : node->children) weighPaths(c, seen);

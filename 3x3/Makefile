@@ -11,7 +11,7 @@ OBJS := $(patsubst %.cpp,$(OBJ_DIR)/%.o,$(SRCS))
 
 INCLUDES := -Iheaders -Iheaders/LFQueue -Iheaders/StateTree
 
-.PHONY: default log help clean clean_bin
+.PHONY: default log debug help clean clean_bin
 
 default: clean_bin $(TARGET)
 	@echo "\033[1;4mMake successful - wait 1 second.\033[0m"
@@ -20,9 +20,16 @@ default: clean_bin $(TARGET)
 
 log: clean_bin $(TARGET)
 
+debug: clean_bin
+	$(MAKE) OBJ_DIR=$(OBJ_DIR) CXXFLAGS="-std=c++20 -Wall -Wextra -g -O0 -pthread" $(TARGET)
+	@echo "\033[1;4mMake successful - wait 1 second.\033[0m"
+	@sleep 1
+	@clear
+
 help:
 	@echo "\"make\" for general purpose build."
 	@echo "\"make log\" to make with logs kept."
+	@echo "\"make debug\" to make a debug build."
 	@echo "\"make clean\" to clean."
 
 $(TARGET): $(OBJS)

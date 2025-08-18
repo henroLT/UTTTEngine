@@ -77,11 +77,16 @@ bool lfqueue::pop(stateTree *&result) {
 bool lfqueue::front(stateTree *&result) {
     pointer headOld = head.load();
     pointer next = headOld.ptr->next.load();
-    if (next.ptr == nullptr) {
-        return false; 
+
+    if (headOld.ptr == head.load().ptr) {
+        if (next.ptr == nullptr) {
+            return false; 
+        }
+        result = next.ptr->data;
+        return true;
     }
-    result = next.ptr->data;
-    return true;
+
+    return false;
 }
 
 bool lfqueue::isEmpty() {
