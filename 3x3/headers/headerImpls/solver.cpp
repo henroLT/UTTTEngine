@@ -112,19 +112,6 @@ void Solver::weighPaths(stateTree* node, std::unordered_map<state, bool>& seen) 
     int scr = eval(dummy);
     if (scr != -2) node->score = static_cast<double>(scr);
     else {
-        //bool compTurn = (node->turn % 2 == 0)? (PLAYER == 'X') : (PLAYER == 'O');
-        //auto it = node->children.begin();
-        //node->score = (*it++)->score;
-        //    
-        //if (compTurn) 
-        //    for (; it != node->children.end(); ++it)
-        //        node->score = std::max(node->score, (*it)->score);
-
-        //else 
-        //    for (; it != node->children.end(); ++it)
-        //        node->score = std::min(node->score, (*it)->score);
-        
-        //average method for now
         double sum = 0.0;
         double numChild = static_cast<double>(node->children.size());
         for (const auto& c : node->children) sum += c->score;
