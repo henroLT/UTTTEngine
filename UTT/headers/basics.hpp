@@ -37,3 +37,4 @@ extern bool DRAW;
 
 
 void wipe(); 
+void printBoard(char board[SIZE][SIZE]);
